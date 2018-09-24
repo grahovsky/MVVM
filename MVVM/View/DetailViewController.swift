@@ -23,17 +23,20 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel?.age.bind { [unowned self] in
+        viewModel?.observable.bind { [unowned self] in
             guard let string = $0 else { return }
+            //связываем textLabel с observable
             self.textLabel.text = string
         }
         
+        //выполняем обновление свойства через 5 секунд 
         delay(delay: 5) { [unowned self] in //[unowned self] - предотвращение цикла сильных ссылок
-            self.viewModel?.age.value = "some new value"
+            self.viewModel?.observable.value = "some new value"
         }
         
     }
     
+    //добавляем метод для отложенного выполнения блока кода
     private func delay(delay: Double, closure: @escaping () -> ()) {
         DispatchQueue.main.asyncAfter(wallDeadline: .now() + delay) {
             closure()
